@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Fraud Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Bank Fraud Detection</h1>
+        <form method="POST" id="prediction-form">
+            <div class="form-group">
+                <label for="customer">Customer:</label>
+                <input type="text" id="customer" name="customer" required>
+            </div>
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" name="age" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <input type="text" id="gender" name="gender" required>
+            </div>
+            <div class="form-group">
+                <label for="merchant">Merchant:</label>
+                <input type="text" id="merchant" name="merchant" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" required>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" step="0.01" id="amount" name="amount" required>
+            </div>
+            <button type="submit">Predict</button>
+        </form>
+        <div id="result" class="result" style="display: none;">
+            <h2 id="result-text"></h2>
+        </div>
+    </div>
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            fetch('/', {
+                method: 'POST',
+                body: new FormData(this)
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('result').style.display = 'block';
+                const resultText = document.getElementById('result-text');
+                resultText.innerHTML = new DOMParser().parseFromString(data, 'text/html').querySelector('#result-text').innerHTML;
+                if (resultText.innerHTML.includes('Fraud')) {
+                    resultText.style.color = 'red';
+                } else {
+                    resultText.style.color = 'green';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
