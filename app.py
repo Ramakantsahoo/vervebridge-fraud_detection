@@ -41,14 +41,13 @@ def index():
         
         # Preprocess the input
         new_input_processed = preprocess_new_input(new_input_data, mappings)
-        # print(new_input_processed)
         
         # Predict
         prediction = model.predict(new_input_processed)
         result = "Fraud" if prediction[0] == 1 else "Not Fraud"
         
-        return f'<div id="result-text">{result}</div>'
-    return render_template('index.html')
+        return render_template('index.html', result=result)
+    return render_template('index.html', result=None)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
